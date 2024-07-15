@@ -28,7 +28,7 @@ if __name__ == "__main__":
 
 
 def setup_commands():
-    command_file_location = os.getcwd() + "\commands\\"
+    command_file_location = os.getcwd() + "\\commands\\"
     sys.path.append(command_file_location)
 
     # Clear the existing commands dictionary
@@ -115,7 +115,7 @@ def save_wakewords(wakewords):
 
 
 def load_wakewords():
-    wakewords = ()
+    wakewords = []
 
     try:
         with open("wakewords.json", "r") as infile:
@@ -132,10 +132,18 @@ def load_wakewords():
 
 def check_update_available(version_url):
     try:
-        with open("version.json", "r") as json_file:
-            json_data = json.load(json_file)
-            saved_version = semantic_version.Version(json_data['version'])
+        # Try to load the local version file
+        try:
+            with open("version.json", "r") as json_file:
+                json_data = json.load(json_file)
+                saved_version = semantic_version.Version(json_data['version'])
+        except FileNotFoundError:
+            # If the version file doesn't exist, create it with a default version
+            saved_version = semantic_version.Version("0.0.0")
+            with open("version.json", "w") as json_file:
+                json.dump({"version": "0.0.0"}, json_file)
 
+        # Fetch the latest version from the remote URL
         version_response = requests.get(version_url)
         if version_response.status_code == 200:
             response_json = version_response.json()
@@ -156,8 +164,8 @@ def check_update_available(version_url):
                         Fore.RED + "Update aborted. Continuing with current version..")
                     return False  # User chose not to update
 
-    except (IOError, KeyError, requests.RequestException, ValueError):
-        pass
+    except (IOError, KeyError, requests.RequestException, ValueError) as e:
+        print(f"Error checking for updates: {e}")
 
     return False
 
