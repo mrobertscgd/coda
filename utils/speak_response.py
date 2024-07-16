@@ -1,7 +1,7 @@
 import pyttsx3 as tts
 import os
 from elevenlabs import voices, generate, play, set_api_key
-import commands.connected as connected
+import Commands.connected as connected
 
 
 def load_elevenlabs_api_key(file_path):

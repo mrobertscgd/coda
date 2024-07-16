@@ -4,7 +4,7 @@ import os
 import speech_recognition as sr
 # import pocketsphinx5 as ps5
 import utils.speak_response as speak
-import commands.connected as connected
+import Commands.connected as connected
 import utils.on_command as command
 
 # Wakeword is our list of trigger words, commands is the commands list and type defines whether the voicerecognition is in response to a question.
@@ -53,6 +53,7 @@ def run(wakeword, commands, type):
 
 def display_message(message):
     print(message, flush=True)
+
 
 def clear_terminal():
     return os.system('cls')
